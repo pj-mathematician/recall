@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-radial {
+    background: radial-gradient(92.87% 92.87% at 50.00% 7.13%, #36016E 0.21%, #090723 87.93%);
+}
+
+.all-shadow {
+    box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.25);
+}
