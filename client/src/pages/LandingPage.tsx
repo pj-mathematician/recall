@@ -1,12 +1,15 @@
-import { useState } from "react";
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
 import { useAudio } from "../contexts/RecallProvider";
 import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
-  const [fileNames, setFileNames] = useState<string[]>([]);
-  const { uploadAudioFiles } = useAudio();
+  const {
+    fileNames,
+    setFileNames,
+    setTranscriptionLanguage,
+    uploadAudioFiles,
+  } = useAudio();
   const navigate = useNavigate();
 
   function handleDragOver(e: React.DragEvent<HTMLFormElement>) {
@@ -60,6 +63,7 @@ function LandingPage() {
       "transcription-language"
     )! as HTMLInputElement;
     const language = languageInput.value;
+    setTranscriptionLanguage(language);
     navigate("/insights");
     uploadAudioFiles(files, language);
   }
