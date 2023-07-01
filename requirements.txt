@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-gunicorn
-colorama
-openai
-python-multipart
