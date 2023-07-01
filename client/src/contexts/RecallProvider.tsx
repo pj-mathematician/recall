@@ -11,7 +11,7 @@ import {
 export type RecallContent = {
   transcriptionLoading: boolean;
   setTranscriptionLoading: Dispatch<SetStateAction<boolean>>;
-  uploadAudioFiles: (files: FileList, language: String) => Promise<void>;
+  uploadAudioFiles: (files: FileList, language: string) => Promise<void>;
 };
 
 export const RecallContext = createContext<RecallContent>({
@@ -32,7 +32,7 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const [transcriptionLoading, setTranscriptionLoading] = useState(false);
 
   const uploadAudioFiles = useCallback(
-    async (files: FileList, language: String) => {
+    async (files: FileList, language: string) => {
       setTranscriptionLoading(true);
       console.log({ files, language });
       //   const formdata = new FormData();

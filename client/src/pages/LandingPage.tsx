@@ -2,10 +2,12 @@ import { useState } from "react";
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
 import { useAudio } from "../contexts/RecallProvider";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
-  const [fileNames, setFileNames] = useState<String[]>([]);
+  const [fileNames, setFileNames] = useState<string[]>([]);
   const { uploadAudioFiles } = useAudio();
+  const navigate = useNavigate();
 
   function handleDragOver(e: React.DragEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,7 +37,7 @@ function LandingPage() {
       "file-input"
     )! as HTMLInputElement;
     if (!fileInput.files) return;
-    const names: String[] = [];
+    const names: string[] = [];
     [...fileInput.files].map((file) => names.push(file.name));
     setFileNames(names);
   }
@@ -58,11 +60,12 @@ function LandingPage() {
       "transcription-language"
     )! as HTMLInputElement;
     const language = languageInput.value;
+    navigate("/insights");
     uploadAudioFiles(files, language);
   }
 
   return (
-    <main className="bg-radial min-h-screen">
+    <main className="min-h-screen">
       <div className="container mx-auto">
         <Navbar />
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
@@ -98,7 +101,9 @@ function LandingPage() {
               <Button text="Upload" type="button" onClick={openFileExplorer} />
               <div className="flex items-center gap-2">
                 {fileNames.map((filename) => (
-                  <span className="text-gray-300">{filename}</span>
+                  <span key={filename} className="text-gray-300">
+                    {filename}
+                  </span>
                 ))}
               </div>
             </form>

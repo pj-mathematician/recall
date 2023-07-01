@@ -1,5 +1,5 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  text: String;
+  text: string;
 }
 
 const Button: React.FC<ButtonProps> = ({ text, ...attributes }) => {
