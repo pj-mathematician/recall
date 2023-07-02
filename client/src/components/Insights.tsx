@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "./Button";
 import Transcription from "./Transcription";
 import { useRecall } from "../contexts/RecallProvider";
+import Translation from "./Translation";
+import Loading from "./Loading";
 
 const views = [
   "Transcription",
@@ -10,25 +12,60 @@ const views = [
   "Sentiment Analysis",
 ];
 
-function getComponent(currentView: string, text: string): React.ReactNode {
-  switch (currentView) {
-    case "Transcription":
-      return <Transcription text={text} />;
-    default:
-      return null;
-  }
-}
-
 const Insights = () => {
+  function getComponent(
+    currentView: string,
+    translation: any,
+    currentAudio: string,
+    language: any,
+    transcriptionLanguage: string
+  ): React.ReactNode {
+    let text = "";
+    switch (currentView) {
+      case "Transcription":
+        text = translation?.[currentAudio]?.[transcriptionLanguage];
+        return <Transcription text={text} />;
+      case "Translation":
+        text = translation?.[currentAudio]?.[transcriptionLanguage];
+        return <Translation text={text} />;
+      default:
+        return null;
+    }
+  }
   const [currentView, setCurrentView] = useState("Transcription");
   const {
     transcriptionLanguage,
     transcriptionLoading,
     fileNames,
-    transcription,
+    translation,
+    translateText,
   } = useRecall();
-  const [language, setLanguage] = useState(transcriptionLanguage);
+
+  const [language, setLanguage] = useState<any>(
+    fileNames.reduce(
+      (prev, filename) => ({ ...prev, [filename]: transcriptionLanguage }),
+      {}
+    )
+  );
   const [currentAudio, setCurrentAudio] = useState(fileNames[0]);
+
+  async function handleLanguageChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    translateText(
+      translation[currentAudio][language],
+      e.target.value,
+      currentAudio
+    );
+    setLanguage({ ...language, [currentAudio]: e.target.value });
+  }
+
+  function handleViewChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    setCurrentView(e.target.value);
+    if (e.target.value === "Transcription") {
+      setLanguage({ ...language, [currentAudio]: transcriptionLanguage });
+    }
+  }
+
+  console.log({ translation, currentAudio });
 
   return (
     <div className="flex h-full grow flex-col gap-4 rounded-lg bg-[#cccccc10] p-4 shadow">
@@ -40,16 +77,16 @@ const Insights = () => {
           <select
             name="language"
             id="language"
-            defaultValue={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            defaultValue={language[currentAudio]}
+            onChange={handleLanguageChange}
             className="ml-2 cursor-pointer border-b border-b-white bg-transparent
                  text-center text-gray-300 outline-none"
-            disabled={currentView !== "Translation"}
+            disabled={currentView !== "Translation" || transcriptionLoading}
           >
             <option className="text-black" value="">
               Auto
             </option>
-            <option className="text-black" value="Enligsh">
+            <option className="text-black" value="English">
               English
             </option>
             <option className="text-black" value="Hindi">
@@ -67,7 +104,8 @@ const Insights = () => {
           name="current-view"
           id="current-view"
           value={currentView}
-          onChange={(e) => setCurrentView(e.target.value)}
+          onChange={handleViewChange}
+          disabled={transcriptionLoading}
           className="ml-2 cursor-pointer border-b border-b-white bg-transparent
          text-center font-semibold text-gray-300 outline-none"
         >
@@ -86,6 +124,7 @@ const Insights = () => {
             id="audio-files"
             value={currentAudio}
             onChange={(e) => setCurrentAudio(e.target.value)}
+            disabled={transcriptionLoading}
             className="ml-2 w-[100px] cursor-pointer overflow-hidden text-ellipsis
                  whitespace-nowrap border-b border-b-white bg-transparent text-center text-gray-300 outline-none"
           >
@@ -98,12 +137,17 @@ const Insights = () => {
         </div>
       </h3>
       <div className="grow text-white">
-        {transcriptionLoading
-          ? "Loading..."
-          : getComponent(
-              currentView,
-              transcription?.[currentAudio]?.[language]
-            )}
+        {transcriptionLoading ? (
+          <Loading />
+        ) : (
+          getComponent(
+            currentView,
+            translation,
+            currentAudio,
+            language,
+            transcriptionLanguage
+          )
+        )}
       </div>
       <div className="ml-auto flex items-center gap-4">
         <div>

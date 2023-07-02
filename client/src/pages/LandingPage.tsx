@@ -127,7 +127,7 @@ function LandingPage() {
                 <option className="text-black" value="">
                   Auto
                 </option>
-                <option className="text-black" value="Enligsh">
+                <option className="text-black" value="English">
                   English
                 </option>
                 <option className="text-black" value="Hindi">

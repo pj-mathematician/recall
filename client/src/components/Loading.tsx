@@ -5,7 +5,7 @@ const Loading = () => {
     <div className="flex h-full w-full items-center justify-center text-2xl text-white">
       <div className="flex items-center gap-4">
         <span>Analysing Audio</span>
-        <ScaleLoader color="#ffffff" height="20" speedMultiplier={1.3} />
+        <ScaleLoader color="#ffffff" height="20px" speedMultiplier={1.3} />
       </div>
     </div>
   );
