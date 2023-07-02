@@ -7,6 +7,10 @@ body {
     background: radial-gradient(92.87% 92.87% at 50.00% 7.13%, #36016E 0.21%, #090723 87.93%);
 }
 
+#root {
+    @apply h-screen
+}
+
 .bg-radial {
     background: radial-gradient(92.87% 92.87% at 50.00% 7.13%, #36016E 0.21%, #090723 87.93%);
 }
