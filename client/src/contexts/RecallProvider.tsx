@@ -120,6 +120,12 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
     if (summarization?.[filename]) return;
     setLoading(true);
 
+    text = text.replace(
+      /(\d+\n\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3})\n/g,
+      ""
+    );
+    text = text.replace(/\n/g, "\\n");
+
     const formdata = new FormData();
     formdata.append("text", text);
     const response = await axios.post(
@@ -135,6 +141,12 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
     async (text: string, filename: string) => {
       if (sentiment?.[filename]) return;
       setLoading(true);
+
+      text = text.replace(
+        /(\d+\n\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3})\n/g,
+        ""
+      );
+      text = text.replace(/\n/g, "\\n");
 
       const formdata = new FormData();
       formdata.append("text", text);
