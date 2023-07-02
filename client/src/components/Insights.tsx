@@ -1,9 +1,12 @@
+import React from "react";
 import { useState } from "react";
 import Button from "./Button";
-import Transcription from "./Transcription";
 import { useRecall } from "../contexts/RecallProvider";
-import Translation from "./Translation";
 import Loading from "./Loading";
+
+const Transcription = React.lazy(() => import("./Transcription"));
+const Translation = React.lazy(() => import("./Translation"));
+const Summarization = React.lazy(() => import("./Summarization"));
 
 const views = [
   "Transcription",
@@ -18,9 +21,9 @@ const Insights = () => {
     translation: any,
     currentAudio: string,
     language: any,
-    transcriptionLanguage: string
+    transcriptionLanguage: string,
+    summarization: any
   ): React.ReactNode {
-    let text = "";
     switch (currentView) {
       case "Transcription":
         return (
@@ -34,6 +37,8 @@ const Insights = () => {
             text={translation?.[currentAudio]?.[language[currentAudio]] ?? ""}
           />
         );
+      case "Summarization":
+        return <Summarization text={summarization?.[currentAudio] ?? ""} />;
       default:
         return null;
     }
@@ -45,6 +50,8 @@ const Insights = () => {
     fileNames,
     translation,
     translateText,
+    summarization,
+    summarizeText,
   } = useRecall();
 
   const [language, setLanguage] = useState<any>(
@@ -72,6 +79,11 @@ const Insights = () => {
       translateText(
         translation?.[currentAudio]?.[language[currentAudio]] ?? "",
         language[currentAudio],
+        currentAudio
+      );
+    } else if (e.target.value === "Summarization") {
+      summarizeText(
+        translation?.[currentAudio]?.[transcriptionLanguage] ?? "",
         currentAudio
       );
     }
@@ -155,7 +167,8 @@ const Insights = () => {
             translation,
             currentAudio,
             language,
-            transcriptionLanguage
+            transcriptionLanguage,
+            summarization
           )
         )}
       </div>

@@ -17,11 +17,13 @@ export type RecallContent = {
     language: string,
     filename: string
   ) => Promise<void>;
+  summarizeText: (text: string, filename: string) => Promise<void>;
   fileNames: string[];
   setFileNames: Dispatch<SetStateAction<string[]>>;
   transcriptionLanguage: string;
   setTranscriptionLanguage: Dispatch<SetStateAction<string>>;
   translation: any;
+  summarization: any;
 };
 
 export const RecallContext = createContext<RecallContent>({
@@ -29,11 +31,13 @@ export const RecallContext = createContext<RecallContent>({
   setTranscriptionLoading: () => {},
   uploadAudioFiles: async () => {},
   translateText: async () => {},
+  summarizeText: async () => {},
   fileNames: [],
   setFileNames: () => {},
   transcriptionLanguage: "",
   setTranscriptionLanguage: () => {},
   translation: {},
+  summarization: {},
 });
 
 export function useRecall() {
@@ -44,22 +48,16 @@ type AudioProviderProps = {
   children: React.ReactNode;
 };
 
-function jsonEscape(str: string) {
-  return str
-    .replace(/\n/g, "\\\\n")
-    .replace(/\r/g, "\\\\r")
-    .replace(/\t/g, "\\\\t");
-}
-
 const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
-  const [transcriptionLoading, setTranscriptionLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [transcriptionLanguage, setTranscriptionLanguage] = useState("");
   const [translation, setTranslation] = useState<any>({});
+  const [summarization, setSummarization] = useState<any>({});
 
   const uploadAudioFiles = useCallback(
     async (files: FileList, language: string) => {
-      setTranscriptionLoading(true);
+      setLoading(true);
       const formdata = new FormData();
       for (let file of files) {
         formdata.append("files", file);
@@ -82,7 +80,7 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         {}
       );
       setTranslation(audioTranscriptions);
-      setTranscriptionLoading(false);
+      setLoading(false);
     },
     []
   );
@@ -94,7 +92,7 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         translation?.[filename]?.[language]
       )
         return;
-      setTranscriptionLoading(true);
+      setLoading(true);
       const data = JSON.parse(
         JSON.stringify({
           output_language: language,
@@ -105,20 +103,34 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         `${import.meta.env.VITE_API_SERVER_URL}/text/translate/`,
         data
       );
-      debugger;
-      const audioTranscriptions = translation;
-      audioTranscriptions[filename][language] = response.data;
-      setTranslation(audioTranscriptions);
-      setTranscriptionLoading(false);
+      const audioTranslations = translation;
+      audioTranslations[filename][language] = response.data;
+      setTranslation(audioTranslations);
+      setLoading(false);
     },
     [translation]
   );
 
+  const summarizeText = useCallback(async (text: string, filename: string) => {
+    if (summarization?.[filename]) return;
+    setLoading(true);
+
+    const formdata = new FormData();
+    formdata.append("text", text);
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_SERVER_URL}/text/summary/`,
+      formdata
+    );
+
+    setSummarization({ summarization, [filename]: response.data });
+    setLoading(false);
+  }, []);
+
   return (
     <RecallContext.Provider
       value={{
-        transcriptionLoading,
-        setTranscriptionLoading,
+        transcriptionLoading: loading,
+        setTranscriptionLoading: setLoading,
         uploadAudioFiles,
         fileNames,
         setFileNames,
@@ -126,6 +138,8 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         setTranscriptionLanguage,
         translation,
         translateText,
+        summarization,
+        summarizeText,
       }}
     >
       {children}
