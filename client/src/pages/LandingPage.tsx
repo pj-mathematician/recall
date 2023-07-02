@@ -1,6 +1,6 @@
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
-import { useAudio } from "../contexts/RecallProvider";
+import { useRecall } from "../contexts/RecallProvider";
 import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
@@ -9,7 +9,7 @@ function LandingPage() {
     setFileNames,
     setTranscriptionLanguage,
     uploadAudioFiles,
-  } = useAudio();
+  } = useRecall();
   const navigate = useNavigate();
 
   function handleDragOver(e: React.DragEvent<HTMLFormElement>) {

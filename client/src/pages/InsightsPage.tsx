@@ -1,6 +1,6 @@
 import Chat from "../components/Chat";
 import Insights from "../components/Insights";
-import { useAudio } from "../contexts/RecallProvider";
+import { useRecall } from "../contexts/RecallProvider";
 
 const InsightsPage = () => {
   //   const { fileNames, transcriptionLanguage } = useAudio();

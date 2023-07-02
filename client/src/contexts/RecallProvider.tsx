@@ -16,6 +16,7 @@ export type RecallContent = {
   setFileNames: Dispatch<SetStateAction<string[]>>;
   transcriptionLanguage: string;
   setTranscriptionLanguage: Dispatch<SetStateAction<string>>;
+  transcription: any;
 };
 
 export const RecallContext = createContext<RecallContent>({
@@ -26,9 +27,10 @@ export const RecallContext = createContext<RecallContent>({
   setFileNames: () => {},
   transcriptionLanguage: "",
   setTranscriptionLanguage: () => {},
+  transcription: {},
 });
 
-export function useAudio() {
+export function useRecall() {
   return useContext(RecallContext);
 }
 
@@ -40,11 +42,23 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const [transcriptionLoading, setTranscriptionLoading] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [transcriptionLanguage, setTranscriptionLanguage] = useState("");
+  const [transcription, setTranscription] = useState<any>({});
 
   const uploadAudioFiles = useCallback(
     async (files: FileList, language: string) => {
+      if (transcription[language]) return;
       setTranscriptionLoading(true);
       console.log({ files, language });
+      const audioTranscriptions = [...files].reduce(
+        (prev: any, file) => ({
+          ...prev,
+          [file.name]: { [language]: "abcjsbd" },
+        }),
+        {}
+      );
+      console.log(audioTranscriptions);
+      setTranscription(audioTranscriptions);
+      // setTranscription({ ...transcription, [language]: "acbdjkjsdfsk" });
       //   const formdata = new FormData();
       // formdata.append("file", files[0]);
 
@@ -72,7 +86,8 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         fileNames,
         setFileNames,
         transcriptionLanguage,
-        setTranscriptionLanguage
+        setTranscriptionLanguage,
+        transcription,
       }}
     >
       {children}
