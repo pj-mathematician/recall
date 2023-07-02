@@ -26,6 +26,10 @@ export type RecallContent = {
   translation: any;
   summarization: any;
   sentiment: any;
+  chatLoading: boolean;
+  chatMessages: string[];
+  setChatMessages: Dispatch<SetStateAction<string[]>>;
+  askQuestion: (query: string) => Promise<void>;
 };
 
 export const RecallContext = createContext<RecallContent>({
@@ -42,6 +46,10 @@ export const RecallContext = createContext<RecallContent>({
   translation: {},
   summarization: {},
   sentiment: {},
+  chatLoading: false,
+  chatMessages: [],
+  setChatMessages: () => {},
+  askQuestion: async () => {},
 });
 
 export function useRecall() {
@@ -59,6 +67,8 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const [translation, setTranslation] = useState<any>({});
   const [summarization, setSummarization] = useState<any>({});
   const [sentiment, setSentiment] = useState<any>({});
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState<string[]>([]);
 
   const uploadAudioFiles = useCallback(
     async (files: FileList, language: string) => {
@@ -161,6 +171,29 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
     []
   );
 
+  const askQuestion = useCallback(
+    async (query: string) => {
+      setChatLoading(true);
+
+      const formdata = new FormData();
+      let text = "";
+      for (let filename of fileNames) {
+        text += `Audio Name: ${filename}\nAudio Transcript: ${translation[filename][transcriptionLanguage]}\n\n`;
+      }
+
+      formdata.append("text", text);
+      formdata.append("query", query);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_SERVER_URL}/text/qna/`,
+        formdata
+      );
+
+      setChatMessages((prev) => [...prev, response.data]);
+      setChatLoading(false);
+    },
+    [translation]
+  );
+
   return (
     <RecallContext.Provider
       value={{
@@ -177,6 +210,10 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         summarizeText,
         getTextSentiment,
         sentiment,
+        chatLoading,
+        chatMessages,
+        setChatMessages,
+        askQuestion,
       }}
     >
       {children}
