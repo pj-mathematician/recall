@@ -7,6 +7,9 @@ Transform Your Audio into Insights: Transcribe, Analyze and Search
 
 ## Frontend Demo Link : https://recall-kni4.vercel.app/
 
+## Frontend Github Repo : https://github.com/pj-mathematician/recall/tree/Frontend_main  [Frontend_main branch]
+## Backend Github Repo : https://github.com/pj-mathematician/recall/tree/backend_master [Backend_master_branch]
+
 ## What is Recall?
 Recall is a powerful audio transcription and search tool designed to help you effortlessly transcribe audio recordings and find specific phrases within hundreds of recordings. With Recall, you can easily convert spoken words into text, ask relevant questions, perform searches, and gain valuable insights from your audio data.
 
