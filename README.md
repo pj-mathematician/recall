@@ -23,18 +23,30 @@ Recall is a powerful audio transcription and search tool designed to help you ef
 - User-Friendly Interface: Enjoy a modern and intuitive interface that simplifies the transcription and search process, making it accessible to users of all levels.
 
 ### Timestamp based transcription
+Endpoints:
+* /audio/transcribe/file/
+* /audio/transcribe/multiple/
+
 ![chrome_GClDHu78WL](https://github.com/pj-mathematician/recall/assets/55710610/aba93453-6239-4939-8163-61e26e8fbfa7)
 
 ### Accurate Timestamp based translation
+Endpoints:
+* /audio/transcribe/multiple/
 ![chrome_OapVbapQRp](https://github.com/pj-mathematician/recall/assets/55710610/0c55a216-4df4-4a97-83f3-9a6a805bc62b)
 
 ### Comprehensive Summary
+Endpoints:
+* /audio/summary/
 ![chrome_VSl6apbKtW](https://github.com/pj-mathematician/recall/assets/55710610/f3dfcd4e-3888-4ccd-9887-50d40ef232d0)
 
 ### Sentiment Analysis
+Endpoints: 
+* /audio/sentiment/
 ![chrome_vZCMBybz1g](https://github.com/pj-mathematician/recall/assets/55710610/2cd088cf-5fcb-429f-afad-1a17c569c52c)
 
 ### Chatbot
+Endpoints:
+* /audio/qna/
 ![chrome_upcwifEtkV](https://github.com/pj-mathematician/recall/assets/55710610/ec7b4f57-672e-44ad-b298-e519ba728b97)
 
 Recall is perfect for researchers, journalists, content creators, and anyone who deals with a large volume of audio data. It saves you time and energy by providing accurate transcriptions, efficient search capabilities, and insightful analysis tools. Experience the power of Recall and unlock the potential within your audio recordings.
