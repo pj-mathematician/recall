@@ -9,8 +9,8 @@ import {
 } from "react";
 
 export type RecallContent = {
-  transcriptionLoading: boolean;
-  setTranscriptionLoading: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   uploadAudioFiles: (files: FileList, language: string) => Promise<void>;
   translateText: (
     text: string,
@@ -27,8 +27,8 @@ export type RecallContent = {
 };
 
 export const RecallContext = createContext<RecallContent>({
-  transcriptionLoading: false,
-  setTranscriptionLoading: () => {},
+  loading: false,
+  setLoading: () => {},
   uploadAudioFiles: async () => {},
   translateText: async () => {},
   summarizeText: async () => {},
@@ -129,8 +129,8 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
   return (
     <RecallContext.Provider
       value={{
-        transcriptionLoading: loading,
-        setTranscriptionLoading: setLoading,
+        loading,
+        setLoading,
         uploadAudioFiles,
         fileNames,
         setFileNames,

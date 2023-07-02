@@ -16,39 +16,40 @@ const views = [
   "Sentiment Analysis",
 ];
 
-const Insights = () => {
-  function getComponent(
-    currentView: string,
-    translation: any,
-    currentAudio: string,
-    language: any,
-    transcriptionLanguage: string,
-    summarization: any
-  ): React.ReactNode {
-    switch (currentView) {
-      case "Transcription":
-        return (
-          <Transcription
-            text={translation?.[currentAudio]?.[transcriptionLanguage] ?? ""}
-          />
-        );
-      case "Translation":
-        return (
-          <Translation
-            text={translation?.[currentAudio]?.[language[currentAudio]] ?? ""}
-          />
-        );
-      case "Summarization":
-        return <Summarization text={summarization?.[currentAudio] ?? ""} />;
-      default:
-        return null;
-    }
+function getComponent(
+  currentView: string,
+  translation: any,
+  currentAudio: string,
+  language: any,
+  transcriptionLanguage: string,
+  summarization: any
+): React.ReactNode {
+  switch (currentView) {
+    case "Transcription":
+      return (
+        <Transcription
+          text={translation?.[currentAudio]?.[transcriptionLanguage] ?? ""}
+        />
+      );
+    case "Translation":
+      return (
+        <Translation
+          text={translation?.[currentAudio]?.[language[currentAudio]] ?? ""}
+        />
+      );
+    case "Summarization":
+      return <Summarization text={summarization?.[currentAudio] ?? ""} />;
+    default:
+      return null;
   }
+}
+
+const Insights = () => {
   const [currentView, setCurrentView] = useState("Transcription");
   const [exportAs, setExportAs] = useState("text");
   const {
     transcriptionLanguage,
-    transcriptionLoading,
+    loading,
     fileNames,
     translation,
     translateText,
@@ -117,7 +118,7 @@ const Insights = () => {
             onChange={handleLanguageChange}
             className="ml-2 cursor-pointer border-b border-b-white bg-transparent
                  text-center text-gray-300 outline-none"
-            disabled={currentView !== "Translation" || transcriptionLoading}
+            disabled={currentView !== "Translation" || loading}
           >
             <option className="text-black" value="">
               Auto
@@ -141,7 +142,7 @@ const Insights = () => {
           id="current-view"
           value={currentView}
           onChange={handleViewChange}
-          disabled={transcriptionLoading}
+          disabled={loading}
           className="ml-2 cursor-pointer border-b border-b-white bg-transparent
          text-center font-semibold text-gray-300 outline-none"
         >
@@ -160,7 +161,7 @@ const Insights = () => {
             id="audio-files"
             value={currentAudio}
             onChange={(e) => setCurrentAudio(e.target.value)}
-            disabled={transcriptionLoading}
+            disabled={loading}
             className="ml-2 w-[100px] cursor-pointer overflow-hidden text-ellipsis
                  whitespace-nowrap border-b border-b-white bg-transparent text-center text-gray-300 outline-none"
           >
@@ -173,7 +174,7 @@ const Insights = () => {
         </div>
       </h3>
       <div id="audio-content" className="grow text-white">
-        {transcriptionLoading ? (
+        {loading ? (
           <Loading />
         ) : (
           getComponent(
