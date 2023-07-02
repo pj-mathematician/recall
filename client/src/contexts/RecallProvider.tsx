@@ -18,12 +18,14 @@ export type RecallContent = {
     filename: string
   ) => Promise<void>;
   summarizeText: (text: string, filename: string) => Promise<void>;
+  getTextSentiment: (text: string, filename: string) => Promise<void>;
   fileNames: string[];
   setFileNames: Dispatch<SetStateAction<string[]>>;
   transcriptionLanguage: string;
   setTranscriptionLanguage: Dispatch<SetStateAction<string>>;
   translation: any;
   summarization: any;
+  sentiment: any;
 };
 
 export const RecallContext = createContext<RecallContent>({
@@ -32,12 +34,14 @@ export const RecallContext = createContext<RecallContent>({
   uploadAudioFiles: async () => {},
   translateText: async () => {},
   summarizeText: async () => {},
+  getTextSentiment: async () => {},
   fileNames: [],
   setFileNames: () => {},
   transcriptionLanguage: "",
   setTranscriptionLanguage: () => {},
   translation: {},
   summarization: {},
+  sentiment: {},
 });
 
 export function useRecall() {
@@ -54,6 +58,7 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const [transcriptionLanguage, setTranscriptionLanguage] = useState("");
   const [translation, setTranslation] = useState<any>({});
   const [summarization, setSummarization] = useState<any>({});
+  const [sentiment, setSentiment] = useState<any>({});
 
   const uploadAudioFiles = useCallback(
     async (files: FileList, language: string) => {
@@ -122,9 +127,27 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
       formdata
     );
 
-    setSummarization({ summarization, [filename]: response.data });
+    setSummarization({ ...summarization, [filename]: response.data });
     setLoading(false);
   }, []);
+
+  const getTextSentiment = useCallback(
+    async (text: string, filename: string) => {
+      if (sentiment?.[filename]) return;
+      setLoading(true);
+
+      const formdata = new FormData();
+      formdata.append("text", text);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_SERVER_URL}/text/sentiment/`,
+        formdata
+      );
+
+      setSentiment({ ...sentiment, [filename]: response.data });
+      setLoading(false);
+    },
+    []
+  );
 
   return (
     <RecallContext.Provider
@@ -140,6 +163,8 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         translateText,
         summarization,
         summarizeText,
+        getTextSentiment,
+        sentiment,
       }}
     >
       {children}

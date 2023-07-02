@@ -8,6 +8,7 @@ import { downloadTextFile, downloadSrtFile } from "../utils/export";
 const Transcription = React.lazy(() => import("./Transcription"));
 const Translation = React.lazy(() => import("./Translation"));
 const Summarization = React.lazy(() => import("./Summarization"));
+const SentimentAnalysis = React.lazy(() => import("./SentimentAnalysis"));
 
 const views = [
   "Transcription",
@@ -15,34 +16,6 @@ const views = [
   "Summarization",
   "Sentiment Analysis",
 ];
-
-function getComponent(
-  currentView: string,
-  translation: any,
-  currentAudio: string,
-  language: any,
-  transcriptionLanguage: string,
-  summarization: any
-): React.ReactNode {
-  switch (currentView) {
-    case "Transcription":
-      return (
-        <Transcription
-          text={translation?.[currentAudio]?.[transcriptionLanguage] ?? ""}
-        />
-      );
-    case "Translation":
-      return (
-        <Translation
-          text={translation?.[currentAudio]?.[language[currentAudio]] ?? ""}
-        />
-      );
-    case "Summarization":
-      return <Summarization text={summarization?.[currentAudio] ?? ""} />;
-    default:
-      return null;
-  }
-}
 
 const Insights = () => {
   const [currentView, setCurrentView] = useState("Transcription");
@@ -55,6 +28,8 @@ const Insights = () => {
     translateText,
     summarization,
     summarizeText,
+    sentiment,
+    getTextSentiment,
   } = useRecall();
 
   const [language, setLanguage] = useState<any>(
@@ -89,6 +64,11 @@ const Insights = () => {
         translation?.[currentAudio]?.[transcriptionLanguage] ?? "",
         currentAudio
       );
+    } else if (e.target.value === "Sentiment Analysis") {
+      getTextSentiment(
+        translation?.[currentAudio]?.[transcriptionLanguage] ?? "",
+        currentAudio
+      );
     }
   }
 
@@ -101,6 +81,37 @@ const Insights = () => {
       downloadTextFile(text, currentAudio);
     } else if (exportAs === "srt") {
       downloadSrtFile(text, currentAudio);
+    }
+  }
+
+  function getComponent(
+    currentView: string,
+    translation: any,
+    currentAudio: string,
+    language: any,
+    transcriptionLanguage: string,
+    summarization: any,
+    sentiment: any
+  ): React.ReactNode {
+    switch (currentView) {
+      case "Transcription":
+        return (
+          <Transcription
+            text={translation?.[currentAudio]?.[transcriptionLanguage] ?? ""}
+          />
+        );
+      case "Translation":
+        return (
+          <Translation
+            text={translation?.[currentAudio]?.[language[currentAudio]] ?? ""}
+          />
+        );
+      case "Summarization":
+        return <Summarization text={summarization?.[currentAudio] ?? ""} />;
+      case "Sentiment Analysis":
+        return <SentimentAnalysis sentiment={sentiment[currentAudio]} />;
+      default:
+        return null;
     }
   }
 
@@ -183,7 +194,8 @@ const Insights = () => {
             currentAudio,
             language,
             transcriptionLanguage,
-            summarization
+            summarization,
+            sentiment
           )
         )}
       </div>
