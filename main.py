@@ -1,6 +1,7 @@
 from fastapi import *
 from typing import List
 # from utils import *
+from schema import *
 from fastapi.openapi.utils import get_openapi
 from transcription.utilities import *
 
@@ -9,7 +10,10 @@ app = FastAPI(debug = True)
 
 # @app.get("/")
 # async def root():
-#     return {"message": "Hello World"}
+#     """
+#     Root endpoint
+#     """
+#     return {"message": "Use /docs"}
 #
 #
 # @app.get("/hello/{name}")
@@ -111,6 +115,28 @@ async def audio_transcribe(file: UploadFile = File(...)):
     trans_ = transcribe(fname)
     os.remove(fname)
     return trans_
+
+@app.post("/audio/transcribe/multiple/")
+async def audio_transcribe_multiple(files: List[UploadFile] = File(...)):
+    f_contents = [await f.read() for f in files]
+    fnames = [f.filename for f in files]
+    fnames = [os.path.join(os.getcwd(), fname) for fname in fnames]
+    transcriptions = []
+    for i in range(len(fnames)):
+        with open(fnames[i], 'wb') as f:
+            f.write(f_contents[i])
+        transcriptions.append(transcribe(fnames[i]))
+        os.remove(fnames[i])
+    return transcriptions
+
+@app.post("/text/translate/")
+async def text_translate(request: Translate):
+    request_json = eval(request.json())
+    output_language = request_json["output_language"]
+    text = request_json["text"]
+    translated_text = translate(text, output_language)
+    return translated_text
+
 
 @app.get("/openapi.json", include_in_schema=False)
 async def get_open_api_endpoint():
