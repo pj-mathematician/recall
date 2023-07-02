@@ -9,7 +9,7 @@ Recall is a powerful audio transcription and search tool designed to help you ef
 - Accurate Audio Transcription: Automatically transcribe your audio recordings into text with high accuracy, saving you time and effort.
 - Intelligent Search: Seamlessly search through a vast collection of recordings to locate specific phrases or keywords, enabling quick access to the information you need.
 - Phrase-Based Questions: Ask relevant questions about specific phrases in your recordings and receive instant answers, streamlining your research and analysis process.
-- ummarization: Generate concise summaries of your transcriptions to quickly grasp the key points and extract valuable insights.
+- Summarization: Generate concise summaries of your transcriptions to quickly grasp the key points and extract valuable insights.
 - Sentiment Analysis: Analyze the sentiment of the recorded conversations to gain a deeper understanding of emotions and attitudes.
 - User-Friendly Interface: Enjoy a modern and intuitive interface that simplifies the transcription and search process, making it accessible to users of all levels.
 
