@@ -23,11 +23,17 @@ const Insights = () => {
     let text = "";
     switch (currentView) {
       case "Transcription":
-        text = translation?.[currentAudio]?.[transcriptionLanguage];
-        return <Transcription text={text} />;
+        return (
+          <Transcription
+            text={translation?.[currentAudio]?.[transcriptionLanguage] ?? ""}
+          />
+        );
       case "Translation":
-        text = translation?.[currentAudio]?.[transcriptionLanguage];
-        return <Translation text={text} />;
+        return (
+          <Translation
+            text={translation?.[currentAudio]?.[language[currentAudio]] ?? ""}
+          />
+        );
       default:
         return null;
     }
@@ -51,7 +57,7 @@ const Insights = () => {
 
   async function handleLanguageChange(e: React.ChangeEvent<HTMLSelectElement>) {
     translateText(
-      translation[currentAudio][language],
+      translation?.[currentAudio]?.[language[currentAudio]] ?? "",
       e.target.value,
       currentAudio
     );
@@ -62,10 +68,14 @@ const Insights = () => {
     setCurrentView(e.target.value);
     if (e.target.value === "Transcription") {
       setLanguage({ ...language, [currentAudio]: transcriptionLanguage });
+    } else if (e.target.value === "Translation") {
+      translateText(
+        translation?.[currentAudio]?.[language[currentAudio]] ?? "",
+        language[currentAudio],
+        currentAudio
+      );
     }
   }
-
-  console.log({ translation, currentAudio });
 
   return (
     <div className="flex h-full grow flex-col gap-4 rounded-lg bg-[#cccccc10] p-4 shadow">

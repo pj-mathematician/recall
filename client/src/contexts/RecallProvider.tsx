@@ -44,6 +44,13 @@ type AudioProviderProps = {
   children: React.ReactNode;
 };
 
+function jsonEscape(str: string) {
+  return str
+    .replace(/\n/g, "\\\\n")
+    .replace(/\r/g, "\\\\r")
+    .replace(/\t/g, "\\\\t");
+}
+
 const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const [transcriptionLoading, setTranscriptionLoading] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
@@ -53,8 +60,6 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const uploadAudioFiles = useCallback(
     async (files: FileList, language: string) => {
       setTranscriptionLoading(true);
-      console.log({ files, language });
-      // setTranslation({ ...transcription, [language]: "acbdjkjsdfsk" });
       const formdata = new FormData();
       for (let file of files) {
         formdata.append("files", file);
@@ -69,7 +74,6 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
           },
         }
       );
-      console.log(response);
       const audioTranscriptions = [...files].reduce(
         (prev: any, file, index) => ({
           ...prev,
@@ -77,7 +81,6 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
         }),
         {}
       );
-      console.log(audioTranscriptions);
       setTranslation(audioTranscriptions);
       setTranscriptionLoading(false);
     },
@@ -86,16 +89,29 @@ const RecallProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
   const translateText = useCallback(
     async (text: string, language: string, filename: string) => {
-      if (translation[filename][language]) return;
+      if (
+        Object.keys(translation).length === 0 ||
+        translation?.[filename]?.[language]
+      )
+        return;
       setTranscriptionLoading(true);
-      console.log({ file: filename, language });
+      const data = JSON.parse(
+        JSON.stringify({
+          output_language: language,
+          text,
+        })
+      );
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_SERVER_URL}/text/translate/`,
+        data
+      );
+      debugger;
       const audioTranscriptions = translation;
-      audioTranscriptions[filename][language] = "xyz";
-      console.log(audioTranscriptions);
+      audioTranscriptions[filename][language] = response.data;
       setTranslation(audioTranscriptions);
       setTranscriptionLoading(false);
     },
-    []
+    [translation]
   );
 
   return (
