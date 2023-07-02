@@ -8,3 +8,4 @@ openpyxl
 openai
 python-multipart
 pydantic
+starlette

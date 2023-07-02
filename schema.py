@@ -6,3 +6,6 @@ from fastapi import *
 class Translate(BaseModel):
     output_language: str
     text: str
+class Search(BaseModel):
+    files: List[UploadFile] = []
+    text: str
