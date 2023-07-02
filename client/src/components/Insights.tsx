@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "./Button";
 import { useRecall } from "../contexts/RecallProvider";
 import Loading from "./Loading";
+import { downloadTextFile, downloadSrtFile } from "../utils/export";
 
 const Transcription = React.lazy(() => import("./Transcription"));
 const Translation = React.lazy(() => import("./Translation"));
@@ -44,6 +45,7 @@ const Insights = () => {
     }
   }
   const [currentView, setCurrentView] = useState("Transcription");
+  const [exportAs, setExportAs] = useState("text");
   const {
     transcriptionLanguage,
     transcriptionLoading,
@@ -86,6 +88,18 @@ const Insights = () => {
         translation?.[currentAudio]?.[transcriptionLanguage] ?? "",
         currentAudio
       );
+    }
+  }
+
+  function handleExport() {
+    const textElement = document.getElementById(
+      "audio-content"
+    )! as HTMLDivElement;
+    const text = textElement.innerText;
+    if (exportAs === "text") {
+      downloadTextFile(text, currentAudio);
+    } else if (exportAs === "srt") {
+      downloadSrtFile(text, currentAudio);
     }
   }
 
@@ -158,7 +172,7 @@ const Insights = () => {
           </select>
         </div>
       </h3>
-      <div className="grow text-white">
+      <div id="audio-content" className="grow text-white">
         {transcriptionLoading ? (
           <Loading />
         ) : (
@@ -180,22 +194,20 @@ const Insights = () => {
           <select
             name="export-as"
             id="export-as"
-            defaultValue="text"
+            value={exportAs}
+            onChange={(e) => setExportAs(e.target.value)}
             className="ml-2 cursor-pointer border-b border-b-white bg-transparent
                  text-center text-gray-300 outline-none"
           >
             <option className="text-black" value="text">
               Text
             </option>
-            <option className="text-black" value="vtt">
-              VTT
-            </option>
             <option className="text-black" value="srt">
               SRT
             </option>
           </select>
         </div>
-        <Button text="Export" />
+        <Button text="Export" onClick={handleExport} />
       </div>
     </div>
   );
