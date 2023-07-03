@@ -1,20 +1,22 @@
 # Recall
 Transform Your Audio into Insights: Transcribe, Analyze and Search
 
-## Hackathon Task : AI Track
+### Hackathon Task : AI Track
 
-## Backend API Endpoints : https://amazebot.azurewebsites.net/docs
+### Backend API Endpoints : https://amazebot.azurewebsites.net/docs
 
-## Frontend Demo Link : https://recall-kni4.vercel.app/
+### Frontend Demo Link : https://recall-kni4.vercel.app/
 
-## Frontend Github Repo : https://github.com/pj-mathematician/recall/tree/Frontend_main  [Frontend_main branch]
-## Backend Github Repo : https://github.com/pj-mathematician/recall/tree/backend_master [Backend_master_branch]
+### Youtube Video Link : https://youtu.be/jnAhdbNL268
 
-## What is Recall?
+### Frontend Github Repo : https://github.com/pj-mathematician/recall/tree/Frontend_main  [Frontend_main branch]
+### Backend Github Repo : https://github.com/pj-mathematician/recall/tree/backend_master [Backend_master_branch]
+
+### What is Recall?
 Recall is a powerful audio transcription and search tool designed to help you effortlessly transcribe audio recordings and find specific phrases within hundreds of recordings. With Recall, you can easily convert spoken words into text, ask relevant questions, perform searches, and gain valuable insights from your audio data.
 
 
-## Key Features
+### Key Features
 - Accurate Audio Transcription: Automatically transcribe your audio recordings into text with high accuracy, saving you time and effort.
 - Intelligent Search: Seamlessly search through a vast collection of recordings to locate specific phrases or keywords, enabling quick access to the information you need.
 - Phrase-Based Questions: Ask relevant questions about specific phrases in your recordings and receive instant answers, streamlining your research and analysis process.
@@ -51,11 +53,12 @@ Endpoints:
 
 Recall is perfect for researchers, journalists, content creators, and anyone who deals with a large volume of audio data. It saves you time and energy by providing accurate transcriptions, efficient search capabilities, and insightful analysis tools. Experience the power of Recall and unlock the potential within your audio recordings.
 
+### Architecture
 ![Recall](https://github.com/pj-mathematician/recall/assets/55710610/0254c20b-8ece-4e4c-a240-c06f35d5002a)
 
 Get started with Recall today and never miss a word again!
 
-## Team: ART in Artificial Intelligence (693462-U71TLF08)
+### Team: ART in Artificial Intelligence (693462-U71TLF08)
 Harshit Kumar https://www.linkedin.com/in/harshit-kumar-/
 
 Chaitanya Giti https://www.linkedin.com/in/chaitanya-giri/
